@@ -1,6 +1,4 @@
-import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler
 from sklearn.ensemble import IsolationForest
 from sklearn.neighbors import LocalOutlierFactor
@@ -9,7 +7,7 @@ from sklearn.metrics import classification_report, confusion_matrix
 # -----------------------------------------
 # Load dataset
 # -----------------------------------------
-df = pd.read_csv("C:\Users\f\Desktop\AI ML Project\creditcard.csv")   # Upload this file in Colab
+df = pd.read_csv("creditcard.csv")
 
 print("Dataset Shape:", df.shape)
 df.head()
@@ -38,7 +36,7 @@ print("Valid Cases:", len(valid))
 # -----------------------------------------
 # 1. Isolation Forest
 # -----------------------------------------
-iso_forest = IsolationForest(contamination=len(fraud)/len(df), random_state=42)
+iso_forest = IsolationForest(contamination=max(0.01, len(fraud)/len(df)), random_state=42)
 iso_pred = iso_forest.fit_predict(X)
 
 # Convert -1 = fraud, 1 = normal → 1 = fraud, 0 = normal
@@ -51,11 +49,7 @@ print(classification_report(y, iso_pred))
 # -----------------------------------------
 # 2. Local Outlier Factor
 # -----------------------------------------
-# -----------------------------------------
-# 2. Local Outlier Factor
-# -----------------------------------------
-# The class name must be LocalOutlierFactor, not 'Local Outlier Factor'
-lof = LocalOutlierFactor(n_neighbors=20, contamination=len(fraud)/len(df))
+lof = LocalOutlierFactor(n_neighbors=20, contamination=max(0.01, len(fraud)/len(df)))
 lof_pred = lof.fit_predict(X)
 
 lof_pred = [1 if x == -1 else 0 for x in lof_pred]
